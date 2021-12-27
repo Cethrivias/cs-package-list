@@ -53,21 +53,46 @@ public class PackagesFinder
 
     private ProjectNode ProcessProject(string projectPath, Regex? exclude)
     {
-        var node = new ProjectNode(projectPath);
-
-        var doc = XDocument.Load(File.OpenRead(node.Filepath));
-        var elements = doc.XPathSelectElements("//Project/ItemGroup/PackageReference");
-
-        foreach (var element in elements)
+        try
         {
-            var name = element.Attributes().Single(it => it.Name == "Include").Value;
-            var version = element.Attributes().Single(it => it.Name == "Version").Value;
+            var node = new ProjectNode(projectPath);
 
-            if (exclude is not null && exclude.IsMatch(name)) continue;
+            var doc = XDocument.Load(File.OpenRead(node.Filepath));
+            var elements = doc.XPathSelectElements("//Project/ItemGroup/PackageReference");
 
-            node.Packages.Add(new Package(name, version));
+            foreach (var element in elements)
+            {
+                var name = element.Attributes().Single(it => it.Name == "Include").Value;
+                var version = GetVersion(element);
+
+                if (exclude is not null && exclude.IsMatch(name)) continue;
+
+                node.Packages.Add(new Package(name, version));
+            }
+
+            return node;
+        } catch (Exception e)
+        {
+            Console.Error.WriteLine(e);
+            throw new Exception($"Could not get packages for {projectPath}");
         }
+    }
 
-        return node;
+    private static string GetVersion(XElement element)
+    {
+        try
+        {
+            var version = element.Attributes().SingleOrDefault(it => it.Name == "Version");
+            if (version is not null)
+            {
+                return version.Value;
+            }
+        
+            return element.Elements().Single(it => it.Name == "Version").Value;
+        } catch (Exception e)
+        {
+            Console.Error.WriteLine(e);
+            throw new Exception("Could not get package version");
+        }
     }
 }
