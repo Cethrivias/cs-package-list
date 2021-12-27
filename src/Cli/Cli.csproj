@@ -6,9 +6,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackAsTool>true</PackAsTool>
-        <ToolCommandName>cs-package-list</ToolCommandName>
         <PackageOutputPath>../../nupkg</PackageOutputPath>
+        <PackageId>cs-package-list</PackageId>
         <PackageVersion>1.0.1</PackageVersion>
+        <ToolCommandName>cs-package-list</ToolCommandName>
     </PropertyGroup>
 
     <ItemGroup>

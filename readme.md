@@ -13,7 +13,7 @@ I created this project to teach myself how to write CLI Tools in **.NET**. Dont 
 dotnet pack
 
 # Install the package globally
-dotnet tool install --global --add-source ./nupkg Cli
+dotnet tool install --global --add-source ./nupkg cs-package-list
 ```
 
 ---
@@ -21,7 +21,7 @@ dotnet tool install --global --add-source ./nupkg Cli
 ## Removal
 
 ```shell
-dotnet tool uninstall --global cli
+dotnet tool uninstall --global cs-package-list
 ```
 
 ---
@@ -32,7 +32,9 @@ dotnet tool uninstall --global cli
 # Execute the tool in any project/solution you want
 cs-package-list
 
+# Lists packages excluding those that have "Microsoft" in their name
 cs-package-list -e Microsoft
 
+# For more details
 cs-package-list --help
 ```
