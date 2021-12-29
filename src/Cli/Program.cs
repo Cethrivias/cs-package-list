@@ -7,8 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-services.AddTransient<PackagesFinder>();
-services.AddTransient<ListCommand>();
+services.AddSingleton<PackagesFinder>();
+services.AddSingleton<ListCommand>();
+services.AddSingleton<NugetService>();
+services.AddSingleton<ProjectParser>();
+services.AddSingleton<SolutionParser>();
 
 var serviceProvider = services.BuildServiceProvider();
 

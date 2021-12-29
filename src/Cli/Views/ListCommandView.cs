@@ -1,3 +1,4 @@
+using Cli.Views.Shards;
 using CliFx.Infrastructure;
 using Core.Models;
 
@@ -55,9 +56,10 @@ public class ListCommandView : AbstractView
     {
         Console.Output.WriteLine($"Project: {project.Filepath}. {project.Packages.Count} packages");
 
-        foreach (var (name, version) in project.Packages)
+        var packages = project.Packages.OrderBy(it => it.Name);
+        foreach (var package in packages)
         {
-            Console.Output.WriteLine($" - Package: {name}, {version}");
+            new PackageShard(Console, package).Print();
         }
     }
 
@@ -80,9 +82,10 @@ public class ListCommandView : AbstractView
         }
 
         Console.Output.WriteLine($"Unique packages: {packages.Count}");
-        foreach (var (name, version) in packages)
+        var orderedPackages = packages.OrderBy(it => it.Name);
+        foreach (var package in orderedPackages)
         {
-            Console.Output.WriteLine($" - {name}, {version}");
+            new PackageShard(Console, package).Print();
         }
     }
 }

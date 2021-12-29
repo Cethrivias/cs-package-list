@@ -4,6 +4,7 @@ using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core;
+using Core.Models;
 
 namespace Cli.Commands;
 
@@ -20,11 +21,21 @@ public class ListCommand : ICommand
     [CommandOption("exclude", 'e', Description = "Excludes packages that match a regular expression")]
     public Regex? Exclude { get; set; }
 
-    public ValueTask ExecuteAsync(IConsole console)
-    {
-        var packages = _packagesFinder.Find(Exclude);
-        new ListCommandView(console, packages).Print();
+    [CommandOption(
+        "license",
+        'l',
+        Description = "Includes license information in the output. Makes requests to NuGet API"
+    )]
+    public bool License { get; set; } = false;
 
-        return default;
+    public async ValueTask ExecuteAsync(IConsole console)
+    {
+        var options = new PackagesFinderOptions
+        {
+            Exclude = Exclude,
+            Licence = License,
+        };
+        var packages = await _packagesFinder.Find(options);
+        new ListCommandView(console, packages).Print();
     }
 }
